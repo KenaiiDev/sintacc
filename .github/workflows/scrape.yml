@@ -1,0 +1,38 @@
+name: Scrape ANMAT Data
+
+on:
+  schedule:
+    # Ejecutar el día 10 y 25 de cada mes a las 3 AM UTC
+    - cron: '0 3 10,25 * *'
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run scraper
+        env:
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+        run: pnpm scrape
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "Scraping failed! Check the logs."
