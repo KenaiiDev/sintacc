@@ -186,6 +186,35 @@ export default function Home() {
             <p className="text-xs text-gray-500 mt-1">
               Verifica siempre el símbolo oficial en el producto
             </p>
+            <p className="text-xs text-gray-500 mt-2">
+              Hecho por{' '}
+              <a 
+                href="https://lucasvillanueva.tech/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+              >
+                Lucas Villanueva
+              </a>
+              {' | '}
+              <a 
+                href="https://github.com/KenaiiDev" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+              >
+                GitHub
+              </a>
+              {' | '}
+              <a 
+                href="https://github.com/KenaiiDev/sintacc" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+              >
+                Source Code
+              </a>
+            </p>
           </div>
         </footer>
       </div>
