@@ -18,6 +18,16 @@ function normalizeText(text: string): string {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
+function matchesMultiFieldQuery(product: Product, tokens: string[]): boolean {
+  const normalizedMarca = normalizeText(product.marca || '');
+  const normalizedNombre = normalizeText(product.nombreFantasia || '');
+  
+  return tokens.every(token => 
+    normalizedMarca.includes(token) || 
+    normalizedNombre.includes(token)
+  );
+}
+
 async function clearAllProducts(): Promise<void> {
   const keys = await redis.keys(`${REDIS_KEY_PREFIX}product*`);
   
@@ -76,9 +86,19 @@ export async function searchProducts(query: string): Promise<Product[]> {
     return (nombreMatches as unknown) as Product[];
   }
   
+  const tokens = normalizedQuery.split(/\s+/).filter(t => t.length > 0);
+  
   const allProductsStr = await redis.get(`${REDIS_KEY_PREFIX}products:all`);
   if (allProductsStr) {
     const allProducts: Product[] = allProductsStr as Product[];
+    
+    if (tokens.length > 1) {
+      const multiFieldMatches = allProducts.filter(p => matchesMultiFieldQuery(p, tokens));
+      if (multiFieldMatches.length > 0) {
+        return multiFieldMatches;
+      }
+    }
+    
     return allProducts.filter((p: Product) => 
       normalizeText(p.marca || '').includes(normalizedQuery) ||
       normalizeText(p.nombreFantasia || '').includes(normalizedQuery)

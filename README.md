@@ -5,6 +5,7 @@ Una aplicación web Next.js que permite verificar si productos alimenticios son 
 ## Características
 
 - Búsqueda en tiempo real con debounce (500ms)
+- Búsqueda multi-campo: combina marca y nombre (ej: "arcor durazno")
 - Interfaz dinámica con transiciones de color orgánicas tipo "blob"
   - Verde pastel para productos APTO
   - Rojo claro para productos NO APTO
