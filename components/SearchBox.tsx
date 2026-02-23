@@ -29,24 +29,47 @@ export default function SearchBox({ onSearch, isLoading }: SearchBoxProps) {
   }, [debouncedQuery, onSearch]);
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      <div className="relative">
+    <div className="w-full mb-10">
+      <div
+        className="relative flex items-center px-4 rounded-lg transition-all duration-200"
+        style={{
+          background: 'var(--surface-alt)',
+          border: '1px solid var(--border)',
+        }}
+      >
+        <svg
+          className="shrink-0 mr-3 w-4 h-4"
+          style={{ color: 'var(--text-muted)' }}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Escribe el nombre del producto, marca o número de registro"
-          className="w-full px-6 py-4 text-lg text-gray-800 placeholder:text-gray-400 rounded-2xl border-2 border-gray-200 focus:border-emerald-400 focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md bg-white/80 backdrop-blur-sm"
+          placeholder="Nombre del producto, marca o número de registro"
+          autoFocus
+          style={{
+            background: 'transparent',
+            color: 'var(--text-primary)',
+            caretColor: 'var(--text-primary)',
+            fontFamily: "'DM Mono', monospace",
+          }}
+          className="w-full py-4 text-sm placeholder:text-[color:var(--text-muted)] focus:outline-none"
         />
         {isLoading && (
-          <div className="absolute right-4 top-1/2 -translate-y-1/2">
-            <div className="w-6 h-6 border-3 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
+          <div className="shrink-0 ml-3">
+            <div
+              className="w-4 h-4 rounded-full border-2 animate-spin-slow"
+              style={{ borderColor: 'var(--border)', borderTopColor: 'var(--text-secondary)' }}
+            />
           </div>
         )}
       </div>
-      <p className="text-sm text-gray-500 mt-3 text-center">
-        Escribe el nombre del producto, marca o número de registro
-      </p>
     </div>
   );
 }

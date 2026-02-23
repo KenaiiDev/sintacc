@@ -11,107 +11,148 @@ interface ResultDisplayProps {
   isSearching: boolean;
 }
 
-export default function ResultDisplay({ 
-  found, 
-  apto, 
-  products, 
-  message,
-  isSearching 
-}: ResultDisplayProps) {
-  
-  if (isSearching) {
-    return (
-      <div className="mt-12 text-center animate-pulse-soft">
-        <p className="text-xl text-gray-500">Buscando...</p>
-      </div>
-    );
-  }
-
-  if (!found && !message) {
-    return (
-      <div className="mt-12 text-center">
-        <div className="inline-block p-8 rounded-3xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200">
-          <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <p className="text-lg text-gray-600">Comienza buscando un producto</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!found) {
-    return (
-      <div className="mt-12 animate-fade-in">
-        <div className="max-w-3xl mx-auto p-8 rounded-3xl bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 shadow-lg">
-          <div className="text-center">
-            <div className="inline-block p-4 rounded-full bg-red-200 mb-4">
-              <svg className="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </div>
-            <h2 className="text-5xl font-bold text-red-700 mb-4">NO APTO</h2>
-            <p className="text-xl text-red-600">{message || 'Producto no encontrado en el listado de ANMAT'}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (apto) {
-    return (
-      <div className="mt-12 animate-fade-in">
-        <div className="max-w-3xl mx-auto p-8 rounded-3xl bg-gradient-to-br from-emerald-50 to-emerald-100 border-2 border-emerald-200 shadow-lg">
-          <div className="text-center">
-            <div className="inline-block p-4 rounded-full bg-emerald-200 mb-4">
-              <svg className="w-12 h-12 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <h2 className="text-5xl font-bold text-emerald-700 mb-4">APTO</h2>
-            <p className="text-xl text-emerald-600 mb-6">{message || 'Producto apto para celíacos'}</p>
-            
-            {products.length > 0 && (
-              <div className="mt-6 text-left bg-white/50 rounded-2xl p-6 backdrop-blur-sm">
-                <h3 className="text-lg font-semibold text-emerald-800 mb-4">
-                  {products.length === 1 ? 'Producto encontrado:' : `${products.length} productos encontrados:`}
-                </h3>
-                <div className="space-y-4 max-h-96 overflow-y-auto">
-                  {products.slice(0, MAX_DISPLAYED_PRODUCTS).map((product, index) => (
-                    <div key={index} className="p-4 bg-white rounded-xl border border-emerald-100 shadow-sm">
-                      <p className="font-semibold text-emerald-900">{product.nombreFantasia}</p>
-                      <p className="text-sm text-gray-600 mt-1">Marca: {product.marca}</p>
-                      <p className="text-sm text-gray-600">RNPA: {product.rnpa}</p>
-                      <p className="text-xs text-emerald-600 mt-2 font-medium">Estado: {product.estado}</p>
-                    </div>
-                  ))}
-                  {products.length > MAX_DISPLAYED_PRODUCTS && (
-                    <p className="text-sm text-gray-500 text-center pt-2">
-                      Y {products.length - MAX_DISPLAYED_PRODUCTS} productos más...
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+function SearchingState() {
   return (
-    <div className="mt-12 animate-fade-in">
-      <div className="max-w-3xl mx-auto p-8 rounded-3xl bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-200 shadow-lg">
-        <div className="text-center">
-          <div className="inline-block p-4 rounded-full bg-amber-200 mb-4">
-            <svg className="w-12 h-12 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-          </div>
-          <h2 className="text-5xl font-bold text-amber-700 mb-4">PRECAUCIÓN</h2>
-          <p className="text-xl text-amber-600">{message || 'Producto encontrado pero no está vigente'}</p>
-        </div>
+    <div className="mt-6" style={{ color: 'var(--text-muted)', fontFamily: "'DM Mono', monospace" }}>
+      <p className="text-xs tracking-widest uppercase">Buscando en el registro...</p>
+    </div>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="mt-6" style={{ color: 'var(--text-muted)', fontFamily: "'DM Mono', monospace" }}>
+      <p className="text-xs tracking-widest uppercase">Ingresá el nombre de un producto para verificarlo</p>
+    </div>
+  );
+}
+
+function StatusLabel({ label, color }: { label: string; color: string }) {
+  return (
+    <p
+      className="text-xs font-medium tracking-widest uppercase mb-4"
+      style={{ color, fontFamily: "'DM Mono', monospace" }}
+    >
+      {label}
+    </p>
+  );
+}
+
+function ProductCard({ product }: { product: Product }) {
+  return (
+    <div
+      className="py-3 px-4"
+      style={{ borderTop: '1px solid var(--border)' }}
+    >
+      <p className="text-sm leading-snug" style={{ color: 'var(--text-primary)', fontFamily: "'DM Mono', monospace" }}>
+        {product.nombreFantasia}
+      </p>
+      <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
+        <span className="text-xs" style={{ color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace" }}>
+          {product.marca}
+        </span>
+        <span className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: "'DM Mono', monospace" }}>
+          Reg. {product.rnpa}
+        </span>
+        <span className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: "'DM Mono', monospace" }}>
+          {product.estado}
+        </span>
       </div>
     </div>
   );
+}
+
+function ProductList({ products }: { products: Product[] }) {
+  if (products.length === 0) return null;
+
+  const displayed = products.slice(0, MAX_DISPLAYED_PRODUCTS);
+  const remaining = products.length - MAX_DISPLAYED_PRODUCTS;
+
+  return (
+    <div
+      className="mt-6 rounded-lg overflow-hidden"
+      style={{ border: '1px solid var(--border)', background: 'var(--surface-alt)' }}
+    >
+      <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface)' }}>
+        <p className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: "'DM Mono', monospace" }}>
+          {products.length === 1 ? '1 producto encontrado' : `${products.length} productos encontrados`}
+        </p>
+      </div>
+      <div className="max-h-80 overflow-y-auto">
+        {displayed.map((product, index) => (
+          <ProductCard key={index} product={product} />
+        ))}
+        {remaining > 0 && (
+          <div className="py-3 px-4" style={{ borderTop: '1px solid var(--border)' }}>
+            <p className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: "'DM Mono', monospace" }}>
+              Y {remaining} productos más en el registro
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function AptoResult({ products, message }: { products: Product[]; message?: string }) {
+  return (
+    <div className="mt-6 animate-fade-up">
+      <h2
+        className="text-5xl md:text-6xl leading-none mb-3"
+        style={{ color: 'var(--apto)', fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 700 }}
+      >
+        APTO
+      </h2>
+      <p className="text-sm" style={{ color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace" }}>
+        {message || 'Este producto está habilitado para personas celíacas'}
+      </p>
+      <ProductList products={products} />
+    </div>
+  );
+}
+
+function NoAptoResult({ message }: { message?: string }) {
+  return (
+    <div className="mt-6 animate-fade-up">
+      <h2
+        className="text-5xl md:text-6xl leading-none mb-3"
+        style={{ color: 'var(--no-apto)', fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 700 }}
+      >
+        NO APTO
+      </h2>
+      <p className="text-sm" style={{ color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace" }}>
+        {message || 'No se encontró este producto en el registro de ANMAT'}
+      </p>
+    </div>
+  );
+}
+
+function CautionResult({ message }: { message?: string }) {
+  return (
+    <div className="mt-6 animate-fade-up">
+      <h2
+        className="text-5xl md:text-6xl leading-none mb-3"
+        style={{ color: 'var(--caution)', fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 700 }}
+      >
+        PRECAUCIÓN
+      </h2>
+      <p className="text-sm" style={{ color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace" }}>
+        {message || 'El producto fue encontrado pero su habilitación no está vigente'}
+      </p>
+    </div>
+  );
+}
+
+export default function ResultDisplay({
+  found,
+  apto,
+  products,
+  message,
+  isSearching,
+}: ResultDisplayProps) {
+  if (isSearching) return <SearchingState />;
+  if (!found && !message) return <EmptyState />;
+  if (!found) return <NoAptoResult message={message} />;
+  if (apto) return <AptoResult products={products} message={message} />;
+  return <CautionResult message={message} />;
 }

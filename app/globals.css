@@ -3,46 +3,51 @@
 @tailwind utilities;
 
 :root {
-  --background: #fafafa;
-  --foreground: #171717;
-  --apto-bg: #d1fae5;
-  --apto-text: #065f46;
-  --no-apto-bg: #fee2e2;
-  --no-apto-text: #991b1b;
-  --neutral-bg: #f3f4f6;
-  --neutral-text: #4b5563;
+  --bg: #f0ede6;
+  --surface: #e8e4da;
+  --surface-alt: #ffffff;
+  --border: #d4cfc4;
+
+  --text-primary: #1a1916;
+  --text-secondary: #5c5850;
+  --text-muted: #999590;
+
+  --apto: #2d6a4f;
+  --apto-surface: #e0ede6;
+
+  --no-apto: #9b2226;
+  --no-apto-surface: #f0e0e1;
+
+  --caution: #7d5a1e;
+  --caution-surface: #f0ead9;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --apto-bg: #064e3b;
-    --apto-text: #d1fae5;
-    --no-apto-bg: #7f1d1d;
-    --no-apto-text: #fee2e2;
-    --neutral-bg: #1f2937;
-    --neutral-text: #d1d5db;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg);
+  font-family: 'DM Mono', monospace;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+  .font-display {
+    font-family: 'Bricolage Grotesque', sans-serif;
+  }
+  .font-serif {
+    font-family: 'Instrument Serif', serif;
+  }
 }
 
-/* Custom animations */
-@keyframes fadeIn {
+@keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -50,19 +55,14 @@ body {
   }
 }
 
-@keyframes pulse-soft {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out;
+.animate-fade-up {
+  animation: fade-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-pulse-soft {
-  animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.animate-spin-slow {
+  animation: spin-slow 0.8s linear infinite;
 }
