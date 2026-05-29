@@ -1,5 +1,9 @@
+import { config } from 'dotenv';
+import { existsSync } from 'fs';
 import { scrapeANMATData } from '../lib/scraper';
 import { storeProducts } from '../lib/redis';
+
+if (existsSync('.env')) config();
 
 async function main() {
   try {

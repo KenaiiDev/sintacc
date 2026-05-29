@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "scrape": "tsx --env-file=.env scripts/scrape.ts",
+    "scrape": "tsx scripts/scrape.ts",
     "test-redis": "tsx --env-file=.env scripts/test-redis.ts"
   },
   "dependencies": {
