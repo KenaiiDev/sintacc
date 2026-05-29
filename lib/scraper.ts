@@ -18,7 +18,7 @@ async function launchBrowser(): Promise<Browser> {
 
 async function navigateToANMAT(page: Page): Promise<void> {
   await page.goto(ANMAT_URL, {
-    waitUntil: 'networkidle0',
+    waitUntil: 'networkidle2',
     timeout: SCRAPE_TIMEOUT_MS,
   });
 

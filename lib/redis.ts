@@ -88,9 +88,11 @@ export async function searchProducts(query: string): Promise<Product[]> {
   
   const tokens = normalizedQuery.split(/\s+/).filter(t => t.length > 0);
   
-  const allProductsStr = await redis.get(`${REDIS_KEY_PREFIX}products:all`);
-  if (allProductsStr) {
-    const allProducts: Product[] = allProductsStr as Product[];
+  const allProductsRaw = await redis.get(`${REDIS_KEY_PREFIX}products:all`);
+  if (allProductsRaw) {
+    const allProducts: Product[] = typeof allProductsRaw === 'string'
+      ? JSON.parse(allProductsRaw)
+      : allProductsRaw as Product[];
     
     if (tokens.length > 1) {
       const multiFieldMatches = allProducts.filter(p => matchesMultiFieldQuery(p, tokens));

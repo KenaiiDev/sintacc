@@ -4,15 +4,17 @@ async function testRedis() {
   try {
     console.log('Testing Redis connection...');
     
-    const allProductsStr = await redis.get('sintacc:v1:products:all');
+    const allProductsRaw = await redis.get('sintacc:v1:products:all');
     
-    if (!allProductsStr) {
+    if (!allProductsRaw) {
       console.log('❌ No products found in Redis!');
       console.log('Run "pnpm scrape" first to populate the database');
       return;
     }
     
-    const allProducts = JSON.parse(allProductsStr as string);
+    const allProducts = typeof allProductsRaw === 'string'
+      ? JSON.parse(allProductsRaw)
+      : allProductsRaw as any[];
     console.log(`✅ Found ${allProducts.length} products in Redis`);
     console.log('\nFirst product sample:');
     console.log(JSON.stringify(allProducts[0], null, 2));
